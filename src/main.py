@@ -1,3 +1,5 @@
+import os
+
 from aiogram import Bot, Dispatcher, executor
 from aiogram.types import ContentTypes
 
@@ -8,16 +10,17 @@ from bot.states import (
     MainMenu, UsersMenu, WaitUserFullName, WaitUserPosition,
     WaitUserFacePhoto, SaveUser, UpdateUser, UserPage,
     WaitUserSearchQuery, UsersSearchResults, RoomsList, RoomPage,
-    WaitVisitDate, RoomVisits, TasksMenu, TaskOpenDoorNow, AccessControlMenu, SaveAccess, AccessedUsersList,
+    WaitVisitDate, RoomVisits, TasksMenu, TaskOpenDoorNow,
+    AccessControlMenu, SaveAccess, AccessedUsersList,
 )
 
 
 def main():
-    bot = Bot(token='5313341593:AAFcOF_kyOBKfKEOwIRBjpiMsOEOhE8mokU')
+    bot = Bot(token=os.environ['TELEGRAM_BOT_API_TOKEN'])
     dispatcher = Dispatcher(bot)
 
-    storage = SQLiteStateMachineStorage(db_path=r'C:\Users\Victor\Desktop\AccessControlSystem\room_manager_interface\db.sqlite')
-    main_node = MainNodeHTTPConnection('localhost:8080', '126b1e14d1f0a1966a8859a9412e436e')
+    storage = SQLiteStateMachineStorage(db_path=os.environ['STATE_STORAGE_SQLITE_DB_PATH'])
+    main_node = MainNodeHTTPConnection(os.environ['MAIN_NODE_HOST'], os.environ['ADMIN_TOKEN'])
     state_machine = StateMachine(
         states=[
             menu := MainMenu(),
